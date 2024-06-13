@@ -11,10 +11,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { SelectValue, SelectTrigger, SelectItem, SelectGroup, SelectContent, Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
+import { useToast } from "../../../../../components/ui/use-toast";
 
 const EditProd = ({ params }) => {
   const formRef = useRef(null);
   const router = useRouter();
+  const { toast } = useToast()
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -57,10 +59,18 @@ const EditProd = ({ params }) => {
 
     try {
       await axios.put(`http://localhost:8000/products/update/${params.id}/`, updatedProduct);
-      alert('Product updated successfully!');
+      toast({
+        title: "Product updated successfully!",
+        description: "Product updated successfully!",
+      })
+  
       router.push(`/products/view/${params.id}`); 
     } catch (error) {
       console.error('Error updating product:', error);
+      toast({
+        title: "Error updating product",
+        description: "Error updating product",
+      })
     }
   };
 

@@ -1,198 +1,123 @@
 "use client";
-
-import axios from "axios";
-import { useState } from "react";
+import React, { useRef } from 'react';
+import axios from 'axios';
+import {
+  CardTitle, CardDescription, CardHeader, CardContent, CardFooter, Card,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { SelectValue, SelectTrigger, SelectItem, SelectGroup, SelectContent, Select } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { useRouter } from 'next/navigation';
 import { useToast } from "../ui/use-toast";
-import { ToastAction } from "../ui/toast";
 
-export function CreateProd() {
-  const [formData, setFormData] = useState({
-    product_name: "",
-    product_photo: "",
-    product_brand: "",
-    product_price: "",
-    product_description: "",
-    product_category: "",
-    product_quantity: "",
-    product_model_id: "",
-    
-  });
-
+const CreateProd = () => {
+  const formRef = useRef(null);
+  const router = useRouter();
   const { toast } = useToast()
 
-  const handleSubmit = (e) => {
+  const handleCreate = async (e) => {
     e.preventDefault();
+    const form = formRef.current;
+    const newProduct = {
+      product_name: form.elements.name.value,
+      product_brand: form.elements.brand.value,
+      product_price: form.elements.price.value,
+      product_description: form.elements.description.value,
+      product_category: form.elements.category.value,
+      product_quantity: form.elements.quantity.value,
+      product_model_id: form.elements.model_id.value,
+      product_photo: form.elements.photo.value,
+    };
 
-    // Check if all fields are not empty
-    const isFormValid = Object.values(formData).every(value => value.trim() !== "");
-    console.log(formData);
-    if (isFormValid) {
-      axios.post(`${process.env.NEXT_PUBLIC_API}products/create/`, formData)
-        .then(response => {
-          toast({
-            title: "Product created successfully!",
-            action: <ToastAction altText="ok">ok</ToastAction>,
-          })
-        })
-        .catch(error => {
-          toast({
-            title: "Uh oh! Something went wrong.",
-            description: "There was a problem with your request.",
-            action: <ToastAction altText="Try again">Try again</ToastAction>,
-          })
-        });
-    } else {
+    try {
+      await axios.post(`http://localhost:8000/products/create/`, newProduct);
       toast({
-        title: "Please fill in all fields",
-        description: "Please fill in all fields",
-        
+        title: "Product created successfully!",
+        description: "Product created successfully!",
       })
-      
+  
+      router.push(`/products`); 
+    } catch (error) {
+      console.error('Error creating product:', error);
+      toast({
+        title: "Error creating product",
+        description: "Error creating product",
+      })
     }
   };
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [id]: value
-    }));
-  };
-
   return (
-    <div className="max-w-4xl mx-auto px-4 md:px-6 py-8 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Add New Product</h1>
-      <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit}>
-
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="name">
-              Product Name
-            </label>
-            <input
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-              id="product_name"
-              placeholder="Enter product name"
-              type="text"
-              onChange={handleChange}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="photo">
-              Product Photo
-            </label>
-            <input
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-              id="product_photo"
-              placeholder="Enter photo link"
-              type="text"
-              onChange={handleChange}
-            />
-          </div>
-
-        {
-          formData.product_photo && (
-            <div>
-              <img src={formData.product_photo} 
-              alt={formData.product_name} 
-              className="w-32 h-32 object-cover rounded-md" />
+    <div className="flex justify-center items-center h-screen">
+      <Card key="1" className="w-full max-w-2xl">
+        <CardHeader>
+          <CardTitle>Create New Product</CardTitle>
+          <CardDescription>Fill in the details of your new product.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form ref={formRef} onSubmit={handleCreate} className="grid gap-6">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input id="name" name="name" placeholder="Product Name" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="brand">Brand</Label>
+                <Input id="brand" name="brand" placeholder="Brand Name" />
+              </div>
             </div>
-          )
-        }
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="brand">
-              Product Brand
-            </label>
-            <input
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-              id="product_brand"
-              placeholder="Enter product brand"
-              type="text"
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-bold  text-gray-700 dark:text-gray-300" htmlFor="price">
-              Product Price
-            </label>
-            <input
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-              id="product_price"
-              placeholder="Enter product price"
-              type="number"
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="description">
-              Product Description
-            </label>
-            <textarea
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-              id="product_description"
-              placeholder="Enter product description"
-              rows={3}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="category">
-              Product Category
-            </label>
-            <select
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-              id="product_category"
-              onChange={handleChange}
-            >
-              <option>Video Games</option>
-              <option>Gaming Consoles</option>
-              <option>Gaming Accessories</option>
-              <option>Gaming Hardware</option>
-              <option>Gaming Merchandise</option>
-              <option>Gaming Apparel</option>
-              <option>Gaming Collectibles</option>
-
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="quantity">
-              Product Quantity
-            </label>
-            <input
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-              id="product_quantity"
-              placeholder="Enter product quantity"
-              type="number"
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="model">
-              Product Model ID
-            </label>
-            <input
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-              id="product_model_id"
-              placeholder="Enter product model ID"
-              type="text"
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-      </form>
-      <div className="mt-6 flex justify-end">
-        <button
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-          type="submit"
-          onClick={handleSubmit}
-        >
-          Save Product
-        </button>
-      </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="price">Price</Label>
+                <Input id="price" name="price" placeholder="Price" type="number" step="0.01" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea id="description" name="description" placeholder="Product Description" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <Select  name="category" defaultValue="">
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                  <SelectItem value="Video Games">Video Games</SelectItem>
+<SelectItem value="Gaming Consoles">Gaming Consoles</SelectItem>
+<SelectItem value="Gaming Accessories">Gaming Accessories</SelectItem>
+<SelectItem value="Gaming Hardware">Gaming Hardware</SelectItem>
+<SelectItem value="Gaming Merchandise">Gaming Merchandise</SelectItem>
+<SelectItem value="Gaming Apparel">Gaming Apparel</SelectItem>
+<SelectItem value="Gaming Collectibles">Gaming Collectibles</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="quantity">Quantity</Label>
+                <Input id="quantity" name="quantity" placeholder="Quantity" type="number" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="model_id">Model ID</Label>
+                <Input id="model_id" name="model_id" placeholder="Model ID" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="photo">Photo</Label>
+              <Input id="photo" name="photo" placeholder="Photo" type="text" />
+            </div>
+            <CardFooter>
+              <Button type="submit" className="ml-auto">Create Product</Button>
+            </CardFooter>
+          </form>
+        </CardContent>
+      </Card>
     </div>
-  )
-}
+  );
+};
+
+export default CreateProd;

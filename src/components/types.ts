@@ -9,4 +9,12 @@ export interface Product {
     quantity: number | null;
     model_id: string | null;
   }
+export interface Sale {
+    month: string;
+    total_sale: number;
+    id:string,
+          productName: string,
+          saleDate: string,
+          quantity: number,
+  }
   

@@ -56,35 +56,21 @@ export function ViewProd({ id }) {
               <div className="hidden md:flex items-start">
                 <div className="grid gap-4">
                   <h1 className="font-bold text-3xl lg:text-4xl">{product.product_name}</h1>
+                  <h4 className="font-bold text-2xl lg:text-2xl">REF:{product.product_model_id}</h4>
                   <div>
+                    
                     <p className="text-gray-500 dark:text-gray-400">{product.product_brand}</p>
                   </div>
                   <div className="text-3xl font-bold">{product.product_price}</div>
-                  <div>
-                    <p className="text-gray-500 dark:text-gray-400">Look out for special offers...</p>
-                  </div>
+                  
                   <div className="flex items-center gap-2">
                     <Label className="text-base" htmlFor="quantity">Quantity</Label>
-                    <Select defaultValue="1">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Array.from({ length: product.product_quantity }, (_, index) => (
-                          <SelectItem key={index} value={String(index + 1)}>
-                            {index + 1}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    
+                      
                     <span className="text-gray-500 dark:text-gray-400">({product.product_quantity} in stock)</span>
                   </div>
                   <div className="flex gap-2">
-                    <Button size="lg">Add to Cart</Button>
-                    <Button size="lg" variant="outline">
-                      <HeartIcon className="w-4 h-4 mr-2" />
-                      Add to Wishlist
-                    </Button>
+                    
                     <div className="flex justify-end gap-2">
                       <Button 
                         className="bg-green-500 text-white hover:bg-green-600" 

@@ -1,4 +1,4 @@
-import { CreateProd } from '@/components/component/create-prod'
+import CreateProd from '@/components/component/create-prod'
 import React from 'react'
 
 const AddProd = () => {

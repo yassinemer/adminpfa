@@ -24,7 +24,7 @@ const Shop = () => {
           description: item.product_description,
           category: item.product_category,
           quantity: item.product_quantity,
-          model: item.product_model_id,
+          model_id: item.product_model_id,
         }));
         setProducts(fetchedProducts);
       })
@@ -79,13 +79,13 @@ const Shop = () => {
                     <td className="px-4 py-3">{product.id}</td>
                     <td className="px-4 py-3">{product.name}</td>
                     <td className="px-4 py-3">{product.brand}</td>
-                    <td className="px-4 py-3 text-right">${product.price.toFixed(2)}</td>
+                    <td className="px-4 py-3 text-right">${product.price}</td>
                     <td className="px-4 py-3">{product.description}</td>
                     <td className="px-4 py-3">{product.category}</td>
                     <td className="px-4 py-3 text-right">{product.quantity}</td>
                     <td className="px-4 py-3">{product.model_id}</td>
                     <td className="px-4 py-3">
-                      <Image
+                      <img
                         src={product.photo || "/placeholder.svg"}
                         alt={product.name}
                         width={64}
@@ -94,9 +94,10 @@ const Shop = () => {
                       />
                     </td>
                     <td className="px-4 py-3">
-                      <Link href={'/products/view/${product.id}'} className="text-blue-500 hover:underline" prefetch={false}>
-                        View Details
-                      </Link>
+                    <Link href={`/products/view/${product.id}`} className="text-blue-500 hover:underline" prefetch={false}>
+    View Details
+</Link>
+
                     </td>
                   </tr>
                 ))}
