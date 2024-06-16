@@ -46,6 +46,10 @@ export function ViewOrder({ id }) {
       });
     }
   };
+  const handleReturn = () => {
+  
+    router.push(`/commandes`);
+  };
 
   return (
     <>
@@ -80,6 +84,7 @@ export function ViewOrder({ id }) {
                       </Button>
                     </div>
                   </div>
+                  <div><Button type="button" onClick={handleReturn} className="ml-2">Return</Button></div>
                 </div>
               </div>
               <Separator />

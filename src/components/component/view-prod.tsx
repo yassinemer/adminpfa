@@ -45,6 +45,10 @@ export function ViewProd({ id }) {
         })
       });
   };
+  const handleReturn = () => {
+  
+    router.push(`/products`);
+  };
 
   return (
     <>
@@ -88,7 +92,9 @@ export function ViewProd({ id }) {
                         Delete
                       </Button>
                     </div>
+                    
                   </div>
+                  <div><Button type="button" onClick={handleReturn} className="ml-2">Return</Button></div>
                 </div>
               </div>
               <Separator />

@@ -11,19 +11,14 @@ export function DashboardAdmin() {
   const [salesData, setSalesData] = useState([]);
 
   useEffect(() => {
-    // Fetch products
-    axios.get('http://localhost:8000/products/')
+    axios.get('http://localhost:8000/orders/topSold/')
       .then((response) => {
-        const fetchedProducts = response.data.products.map((item) => ({
+        const fetchedProducts = response.data.map((item) => ({
           id: item.product_id,
           name: item.product_name,
-          photo: item.product_photo,
           brand: item.product_brand,
-          price: item.product_price,
-          description: item.product_description,
-          category: item.product_category,
-          quantity: item.product_quantity,
-          model: item.product_model_id,
+          totalSold: item.total_sold,
+          totalProfit: item.total_profit,
         }));
         setProducts(fetchedProducts);
       })
@@ -31,11 +26,11 @@ export function DashboardAdmin() {
         console.error('Error fetching products:', error);
       });
 
-    // Fetch sales data
+    
     axios.get('http://localhost:8000/products/topmonth')
       .then((response) => {
-        console.log('Sales Data Response:', response.data); // Log the response data
-        // Transform the object into an array
+        console.log('Sales Data Response:', response.data); 
+        
         const fetchedSalesData = Object.entries(response.data).map(([month, total_sale]) => ({
           name: month,
           count: total_sale,
@@ -68,13 +63,9 @@ export function DashboardAdmin() {
             <TableRow>
               <TableHead>ID</TableHead>
               <TableHead>Name</TableHead>
-              <TableHead>Photo</TableHead>
               <TableHead>Brand</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Quantity</TableHead>
-              <TableHead>Model ID</TableHead>
+              <TableHead>Total Sold</TableHead>
+              <TableHead>Total Profit</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -82,21 +73,9 @@ export function DashboardAdmin() {
               <TableRow key={product.id}>
                 <TableHead>{product.id}</TableHead>
                 <TableHead>{product.name}</TableHead>
-                <TableHead>
-                  <Image
-                    src={product.photo}
-                    alt={product.name}
-                    width={64}
-                    height={64}
-                    className="object-cover"
-                  />
-                </TableHead>
                 <TableHead>{product.brand}</TableHead>
-                <TableHead>{product.price}</TableHead>
-                <TableHead>{product.description}</TableHead>
-                <TableHead>{product.category}</TableHead>
-                <TableHead>{product.quantity}</TableHead>
-                <TableHead>{product.model}</TableHead>
+                <TableHead>{product.totalSold}</TableHead>
+                <TableHead>{product.totalProfit}</TableHead>
               </TableRow>
             ))}
           </TableBody>

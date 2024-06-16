@@ -15,7 +15,7 @@ const EditCommande = ({ params }) => {
   const { toast } = useToast()
 
   useEffect(() => {
-    // Fetch the order details and populate the form fields
+    
     const fetchOrder = async () => {
       try {
         const response = await axios.get(`http://localhost:8000/orders/${params.id}`);
@@ -39,7 +39,7 @@ const EditCommande = ({ params }) => {
     };
 
     try {
-      // Send the updated order status to the backend
+      
       await axios.post(`http://localhost:8000/orders/update/${params.id}/`, updatedOrder);
       toast({
         title: "Order updated successfully!",
@@ -57,7 +57,7 @@ const EditCommande = ({ params }) => {
   };
 
   const handleReturn = () => {
-    // Navigate back to the order details page
+  
     router.push(`/commandes/view/${params.id}`);
   };
 
@@ -85,7 +85,7 @@ const EditCommande = ({ params }) => {
               </Select>
             </div>
             <CardFooter>
-              <Button type="submit">Update Order</Button>
+              <Button className="bg-green-500 text-white hover:bg-green-600" type="submit">Update Order</Button>
               <Button type="button" onClick={handleReturn} className="ml-2">Return</Button>
             </CardFooter>
           </form>

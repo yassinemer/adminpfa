@@ -74,6 +74,10 @@ const EditProd = ({ params }) => {
     }
   };
 
+  const handleReturn = () => {
+  
+    router.push(`/products/view/${params.id}`);
+  };
   return (
     <div className="flex justify-center items-center h-screen">
       <Card key="1" className="w-full max-w-2xl">
@@ -143,7 +147,8 @@ const EditProd = ({ params }) => {
               </div>
             </div>
             <CardFooter>
-              <Button type="submit" className="ml-auto">Update Product</Button>
+              <Button type="submit" className="ml-auto bg-green-500 text-white hover:bg-green-600">Update Product</Button>
+              <Button type="button" onClick={handleReturn} className="ml-2">Return</Button>
             </CardFooter>
           </form>
         </CardContent>
