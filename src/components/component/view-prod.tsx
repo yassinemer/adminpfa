@@ -18,9 +18,10 @@ export function ViewProd({ id }) {
   useEffect(() => {
     if (id) {
 
-      axios.get(`${process.env.NEXT_PUBLIC_API}/products/detail/${id}`)
+      axios.get(`${process.env.NEXT_PUBLIC_API}/products/detail/${id}/`)
         .then(response => {
           setProduct(response.data.product);
+          console.log(response.data.product);
         })
         .catch(error => {
           console.error('Error fetching product:', error);

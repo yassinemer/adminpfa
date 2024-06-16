@@ -9,12 +9,10 @@ export interface Product {
     quantity: number | null;
     model_id: string | null;
   }
-export interface Sale {
-    month: string;
-    total_sale: number;
-    id:string,
-          productName: string,
-          saleDate: string,
-          quantity: number,
+  export interface Order {
+    order_id: number;
+    total_order_price: string;
+    order_status: "pending" | "confirmed" | "shipped" | "delivered" | "cancelled";
   }
+  
   

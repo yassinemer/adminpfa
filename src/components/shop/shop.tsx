@@ -1,5 +1,4 @@
 "use client";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { JSX, SVGProps, useState, useEffect } from "react";
@@ -10,10 +9,15 @@ import Image from 'next/image'; // Import Image component from next/image
 
 const Shop = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    axios.get('http://localhost:8000/products/')
+    let url = 'http://localhost:8000/products/getall/';
+    if(selectedCategory !== '') {
+      url += `?category=${selectedCategory}`;
+    }
+    axios.get(url)
       .then((response) => {
         const fetchedProducts = response.data.products.map((item: any) => ({
           id: item.product_id,
@@ -31,11 +35,13 @@ const Shop = () => {
       .catch((error) => {
         console.error('Error fetching products:', error);
       });
-  }, []);
+  }, [selectedCategory]);
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === '' || product.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <div className="bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
@@ -52,6 +58,22 @@ const Shop = () => {
               type="text"
               onChange={(e) => setSearchQuery(e.target.value)}
             />
+          </div>
+          <div>
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="block w-full pl-10 pr-4 py-2 border border-gray-200 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-50 dark:border-gray-800"
+            >
+              <option value="">All Categories</option>
+              <option value="Video Games">Video Games</option>
+              <option value="Gaming Consoles">Gaming Consoles</option>
+              <option value="Gaming Accessories">Gaming Accessories</option>
+              <option value="Gaming Hardware">Gaming Hardware</option>
+              <option value="Gaming Merchandise">Gaming Merchandise</option>
+              <option value="Gaming Apparel">Gaming Apparel</option>
+              <option value="Gaming Collectibles">Gaming Collectibles</option>
+            </select>
           </div>
         </div>
 
@@ -94,10 +116,9 @@ const Shop = () => {
                       />
                     </td>
                     <td className="px-4 py-3">
-                    <Link href={`/products/view/${product.id}`} className="text-blue-500 hover:underline" prefetch={false}>
-    View Details
-</Link>
-
+                      <Link href={`/products/view/${product.id}`} className="text-blue-500 hover:underline" prefetch={false}>
+                        View Details
+                      </Link>
                     </td>
                   </tr>
                 ))}
