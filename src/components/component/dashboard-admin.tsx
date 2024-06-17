@@ -72,7 +72,7 @@ export function DashboardAdmin() {
               <TableHead>ID</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Brand</TableHead>
-              <TableHead>Total Sold</TableHead>
+              <TableHead>Total units Sold</TableHead>
               <TableHead>Total Profit</TableHead>
             </TableRow>
           </TableHeader>
@@ -83,7 +83,7 @@ export function DashboardAdmin() {
                 <TableHead>{product.name}</TableHead>
                 <TableHead>{product.brand}</TableHead>
                 <TableHead>{product.totalSold}</TableHead>
-                <TableHead>{product.totalProfit}</TableHead>
+                <TableHead>{product.totalProfit} TND</TableHead>
               </TableRow>
             ))}
           </TableBody>
