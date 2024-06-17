@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ResponsiveBar } from '@nivo/bar';
 import { TableHead, TableRow, TableHeader, TableBody, Table } from '@/components/ui/table';
-import Image from 'next/image';
 
 export function DashboardAdmin() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -21,24 +20,33 @@ export function DashboardAdmin() {
           totalProfit: item.total_profit,
         }));
         setProducts(fetchedProducts);
+
+        // Fetch sales data for each product
+        const salesPromises = fetchedProducts.map(product =>
+          axios.get(`http://localhost:8000/orders/saleGraph/${product.id}`)
+            .then(response => ({
+              productId: product.id,
+              productName: product.name,
+              sales: response.data
+            }))
+        );
+
+        Promise.all(salesPromises)
+          .then((salesResponses) => {
+            const aggregatedSalesData = salesResponses.flatMap(({ productName, sales }) =>
+              sales.map(item => ({
+                name: `${productName} - ${item.month}`,
+                count: item.total_sale_quantity,
+              }))
+            );
+            setSalesData(aggregatedSalesData);
+          })
+          .catch((error) => {
+            console.error('Error fetching sales data:', error);
+          });
       })
       .catch((error) => {
         console.error('Error fetching products:', error);
-      });
-
-    
-    axios.get('http://localhost:8000/products/topmonth')
-      .then((response) => {
-        console.log('Sales Data Response:', response.data); 
-        
-        const fetchedSalesData = Object.entries(response.data).map(([month, total_sale]) => ({
-          name: month,
-          count: total_sale,
-        }));
-        setSalesData(fetchedSalesData);
-      })
-      .catch((error) => {
-        console.error('Error fetching sales data:', error);
       });
   }, []);
 
